@@ -1,12 +1,12 @@
 {
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"files": {
 		".agents/skills/approach-designer/SKILL.md": "d932ed30a58cb32dd91ec03ddd2b1c6c59f77714",
 		".agents/skills/issue-splitting/SKILL.md": "01625372d68a81347bf401e8603084420922d04e",
-		".agents/skills/kanbot-admin/SKILL.md": "b09b9ccc5ca90585418a6645919c10d9a487bad9",
-		".agents/skills/kanbot-guide/SKILL.md": "2ccb86b12e5af121b79ef9f53c2a35dbbdb2ddeb",
+		".agents/skills/kanbot-admin/SKILL.md": "47b16ee8a6c6847450589bbb954d5a08c154f52a",
+		".agents/skills/kanbot-guide/SKILL.md": "a24c0a655d6485e65bd5dea2a71f3afe67f04404",
 		".agents/skills/kanbot-idea/SKILL.md": "9d47113a299a75514a00993060bf6afebb049c6c",
-		".agents/skills/plan-template/SKILL.md": "e6b6e55a42bfc42d0c9ff1a5cdf3a0573ab665c0",
+		".agents/skills/plan-template/SKILL.md": "841446c304ffe9783c79f293e050a28ceb540b3d",
 		".agents/skills/pr-description/SKILL.md": "830c94888620de0a5bb7030672c017c5fafa63e5",
 		".agents/skills/project-conventions/SKILL.md": "668d904ff8fdf33edbe9768cd6bf223813380c9d",
 		".agents/skills/project-memory/facts/.gitkeep": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
@@ -26,7 +26,7 @@
 		".kanbot/agents/fixer.md": "16c16692f6d2ee29bc0e4d0ca4a1b3cfc4f1ba72",
 		".kanbot/agents/implementer.md": "f6000b529b1a8bed0def57af9bfa55c1ca5cd3b6",
 		".kanbot/agents/plan-critic.md": "3d1c38922a94712d0f3a725902e3df9cee87bcda",
-		".kanbot/agents/planner.md": "dc50d048164ade2926b58dee48c3919c6b7d9558",
+		".kanbot/agents/planner.md": "6500bea6691685d2b74ea73095f11643e0fcc937",
 		".kanbot/agents/reviewer.md": "7ff1fdd21df4442d3b82784d3e6077195b32ba5b",
 		"AGENTS.md": "f820c2f5a9d3bc299eed35a6012bbc5d19615aef",
 		"CLAUDE.md": "43c994c2d3617f947bcb5adf1933e21dabe46bb5"

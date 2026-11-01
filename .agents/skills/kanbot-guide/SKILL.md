@@ -56,11 +56,12 @@ Go step by step. Run each command, check its output, then go on. If `.kanbot/con
 capabilities:
   verify: { use: e2e-tests, when: Changes users see }
   preview: { use: deploy-preview, required: true }
+  review: code-review # bare name: no when, not required
 ```
 
 - `use`: a skill in `.agents/skills` or an agent in `.kanbot/agents`. `when`: when it applies. `required: true`: a miss blocks acceptance review.
 - Any other name is theirs (`benchmark`, `security`…). Unmapped needs are left to the agent.
-- Suggest, don't install: no `verify` → a skill that runs the app or end-to-end tests; no `preview` → a preview deploy or test build; no `review` → a review skill with their checklist. `kanbot doctor` lists the gaps.
+- Suggest, don't install: no `verify` → a skill that runs the app or end-to-end tests; no `preview` → a preview deploy or test build; no `review` → a review skill with their checklist. `kanbot doctor` names what's not mapped.
 
 ## Choose options
 
