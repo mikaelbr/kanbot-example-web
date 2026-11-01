@@ -1,0 +1,4 @@
+# kanbot
+.kanbot/state.json
+.kanbot/logs/
+.kanbot/daemon.pid

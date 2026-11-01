@@ -1,5 +1,8 @@
-# Example kanbot config. Copy the `capabilities` block into your own .kanbot/config.yml.
-repo: your-org/your-web-app
+# yaml-language-server: $schema=./config.schema.json
+
+provider: claude
+repo: mikaelbr/kanbot-example-web
+baseBranch: main
 
 capabilities:
   verify:                       # reserved: prove acceptance criteria

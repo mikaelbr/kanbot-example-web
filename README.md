@@ -1,12 +1,37 @@
 # kanbot-example-web
 
-Example skills and agents for a web project, wired into [kanbot](https://github.com/mikaelbr/kanbot) through a `capabilities` map.
+A web project set up with [kanbot](https://github.com/mikaelbr/kanbot), where the repo's own skills and agents do the work on code.
 
-kanbot runs the process: board, plans, review rounds, PRs. Your repo decides how code gets built. This repo shows one way to do that for a web app.
+kanbot runs the process: board, plans, review rounds, PRs. The repo decides how code gets built, through the `capabilities` map in `.kanbot/config.yml`.
 
-## What's inside
+## Run it
 
-Skills in `.agents/skills/` (Claude Code and Codex both read them):
+Needs a kanbot release with `capabilities` (newer than 0.3.0), `gh` with the `project` scope, and `claude` or `codex`. See kanbot's [getting started](https://github.com/mikaelbr/kanbot/blob/main/docs/01-getting-started.md).
+
+1. Create your own copy (**Use this template** on GitHub, or fork) and clone it.
+2. Set `repo:` in `.kanbot/config.yml` to your `owner/name`.
+3. Create the board, push, and start:
+
+```sh
+kanbot board create
+git commit -am "chore: point kanbot at my repo" && git push
+kanbot doctor
+kanbot run
+```
+
+4. Add an issue that changes some UI and move it to **Planning**.
+
+What happens:
+
+- **plan**: kanbot's `planner` writes the plan. You move it to **Ready**.
+- **implement**: proves the change with `verify-ui` (mapped as `verify`). Picks `tdd`, `frontend-design` and the rest when they fit.
+- **review pass 1**: `code-review` (mapped as `review`).
+- **review pass 2**: checks acceptance criteria; may run `verify-ui` and `ux-review` itself.
+- The PR body's **Validation** line says what was used and what it showed.
+
+## What's ours, what's kanbot's
+
+`kanbot init` added the rest (planner, reviewers, flow skills, generated `.claude/` and `.codex/`). These are the repo's own:
 
 | Skill | Use it for |
 |---|---|
@@ -20,12 +45,9 @@ Skills in `.agents/skills/` (Claude Code and Codex both read them):
 | `docs-writing` | Docs that match the code and help the reader finish a task. |
 | `safe-refactor` | Refactors, upgrades, CI and infra without behaviour change. |
 
-Agents in `.kanbot/agents/`:
+Agents in `.kanbot/agents/`: `ui-verifier` (screenshots the states you name) and `test-writer` (failing tests from acceptance criteria).
 
-- `ui-verifier`: runs the app and screenshots the states you name.
-- `test-writer`: writes failing tests from acceptance criteria.
-
-`.kanbot/config.yml` maps kanbot's capabilities to them:
+The map in `.kanbot/config.yml`:
 
 | Capability | Uses | When |
 |---|---|---|
@@ -35,95 +57,9 @@ Agents in `.kanbot/agents/`:
 | `ux-review` | `ux-review` | Changes to UI users see |
 | `preview` | (commented example) | Any PR |
 
-## Use with kanbot
+## Reuse in another repo
 
-Needs a kanbot release with `capabilities` (newer than 0.3.0). See kanbot's [getting started](https://github.com/mikaelbr/kanbot/blob/main/docs/01-getting-started.md) for requirements (`gh` with the `project` scope, `claude` or `codex`).
-
-### 1. Copy the files
-
-From your web app's root:
-
-```sh
-git clone --depth 1 https://github.com/mikaelbr/kanbot-example-web /tmp/kanbot-example-web
-mkdir -p .agents/skills .kanbot/agents
-cp -R /tmp/kanbot-example-web/.agents/skills/. .agents/skills/
-cp /tmp/kanbot-example-web/.kanbot/agents/*.md .kanbot/agents/
-```
-
-### 2. Set up kanbot
-
-```sh
-kanbot init --provider claude   # or codex
-```
-
-`init` adds kanbot's own agents and skills next to yours, writes `.kanbot/config.yml`, and generates `.claude/` and `.codex/` from `.kanbot/agents`.
-
-Already have kanbot? Skip `init` and run `kanbot sync` to generate the copied agents.
-
-### 3. Map the capabilities
-
-Add the `capabilities` block from this repo's `.kanbot/config.yml` to yours. Keep your own `repo`.
-
-```yaml
-capabilities:
-  verify:
-    use: verify-ui
-    when: Changes to UI users see
-  review:
-    use: code-review
-  accessibility:
-    use: accessibility
-    when: Changes to UI users see
-  ux-review:
-    use: ux-review
-    when: Changes to UI users see
-```
-
-Edit or drop what doesn't fit your stack. Unmapped skills still work: agents pick them by their description.
-
-### 4. Tell agents about your app
-
-The skills read facts from your repo. Fill in `.agents/skills/project-conventions/SKILL.md` and `AGENTS.md` with your dev command, port, and test, lint and typecheck commands. `verify-ui` can't start the app without them.
-
-### 5. Board, push, check
-
-```sh
-kanbot board create
-git add -A && git commit -m "chore: add kanbot" && git push
-kanbot doctor
-```
-
-`doctor` should list each capability with a check:
-
-```
-✔ capability verify → verify-ui
-✔ capability review → code-review
-✔ capability accessibility → accessibility
-✔ capability ux-review → ux-review
-! capability suggestion — no `preview`: map a skill that gives a human something to try …
-```
-
-The `preview` warning is fine until you add a preview skill.
-
-### 6. Run
-
-```sh
-kanbot run --once --dry-run   # what it would do
-kanbot run                    # start the daemon
-```
-
-Add an issue that changes some UI and move it to **Ready**. What happens:
-
-- **implement** proves the change with `verify-ui` (mapped). It picks unmapped skills like `tdd` and `frontend-design` when they fit.
-- **review pass 1** uses `code-review`.
-- **review pass 2** checks the acceptance criteria and may run `verify-ui` and `ux-review` itself.
-- The PR body's **Validation** line says what was used and what it showed.
-
-## Use without kanbot
-
-The skills don't need kanbot. Copy any of them into your repo's `.agents/skills/`, then ask for them by name or let the agent pick them by description, e.g. "verify the settings page with verify-ui".
-
-They read facts from your repo (`AGENTS.md`, its scripts and conventions), so keep those up to date.
+Copy the skills above into its `.agents/skills/` and the two agents into `.kanbot/agents/`, add the `capabilities` block to its config, and run `kanbot sync`. The skills don't need kanbot: any agent that reads `.agents/skills/` can use them.
 
 ## License
 
