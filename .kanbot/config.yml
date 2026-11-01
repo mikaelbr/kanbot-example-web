@@ -1,0 +1,19 @@
+# Example kanbot config. Copy the `capabilities` block into your own .kanbot/config.yml.
+repo: your-org/your-web-app
+
+capabilities:
+  verify:                       # reserved: prove acceptance criteria
+    use: verify-ui
+    when: Changes to UI users see
+  review:                       # reserved: technical review in pass 1
+    use: code-review
+  accessibility:
+    use: accessibility
+    when: Changes to UI users see
+  ux-review:
+    use: ux-review
+    when: Changes to UI users see
+  # preview:                    # reserved: something a human can try
+  #   use: deploy-preview       # add your own skill, e.g. one that deploys a preview URL
+  #   when: Any PR
+  #   required: true            # a miss blocks acceptance review
