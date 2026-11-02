@@ -12,27 +12,29 @@ Explain in plain words. Ask before choosing for them; give a recommendation with
 
 ## Docs
 
-| Question                                      | Slug                |
-| --------------------------------------------- | ------------------- |
-| How do I install and set up a repo?           | `getting-started`   |
-| How does a card move across the board?        | `workflow`          |
-| How do I file ideas by chatting?              | `capturing-ideas`   |
-| My own PRs, local sessions, direct commits?   | `outside-the-board` |
-| Which agents are there, how do I change them? | `agents`            |
-| Skills and project memory?                    | `skills`            |
-| Claude or Codex?                              | `providers`         |
-| Every config field, labels, notifications     | `configuration`     |
-| Using our own skills and agents for the work  | `capabilities`      |
-| Copilot as an extra reviewer                  | `copilot-review`    |
-| Bot or user identity, merge by approving      | `identity`          |
-| Upgrading and `.kanbot-new` files             | `upgrading`         |
-| Every command and flag                        | `usage`             |
+| Question                                      | Slug                  |
+| --------------------------------------------- | --------------------- |
+| How do I install and set up a repo?           | `getting-started`     |
+| How does a card move across the board?        | `workflow`            |
+| How do I add or file ideas?                   | `capturing-ideas`     |
+| My own PRs, local sessions, direct commits?   | `outside-the-board`   |
+| Which agents are there, how do I change them? | `agents`              |
+| Skills?                                       | `skills`              |
+| Filling in stack, commands and rules          | `project-conventions` |
+| Project memory, facts from corrections        | `project-memory`      |
+| Claude or Codex?                              | `providers`           |
+| Every config field, labels, notifications     | `configuration`       |
+| Using our own skills and agents for the work  | `capabilities`        |
+| Copilot as an extra reviewer                  | `copilot-review`      |
+| Bot or user identity, merge by approving      | `identity`            |
+| Upgrading and `.kanbot-new` files             | `upgrading`           |
+| Every command and flag                        | `usage`               |
 
 ## Board flow
 
 Ideas (you write) → Planning (agent plans, you comment) → Ready (you approve by moving the card) → In Progress (agent builds, opens a PR) → Review (technical, then acceptance review, with fixes; you comment) → Done (you merge, or approve and kanbot merges).
 
-kanbot runs the process; the repo's own skills and agents do the work on code, through capabilities. Plans list assumptions about user need; open questions keep a card from starting in Ready.
+kanbot runs the process; the repo's own skills and agents do the work on code, through capabilities. Plans list assumptions about user need; open questions and open "blocked by" issues keep a card from starting in Ready.
 
 Agents never get a GitHub token. The daemon does every comment, push and PR. Only collaborators with write access can steer agents. Workers see only what's committed, including MCP servers in `.mcp.json`; never the user's own plugins or servers.
 
@@ -42,7 +44,7 @@ Go step by step. Run each command, check its output, then go on. If `.kanbot/con
 
 1. **Requirements.** Bun 1.3+, `gh` logged in, `claude` or `codex` logged in with a subscription (not an API key). Run `gh auth refresh -s project`.
 2. **Provider.** Ask which subscription they have, then `bunx kanbot init --provider claude|codex` in the repo root.
-3. **Conventions.** Fill in `.agents/skills/project-conventions/SKILL.md` with them: stack, commands to test, lint and typecheck. Adjust `.github/workflows/ci.yml` to run the same. Every agent reads this first.
+3. **Conventions.** Fill in `.agents/skills/project-conventions/SKILL.md` with them: stack, commands to test, lint and typecheck. Adjust `.github/workflows/ci.yml` to run the same. Every agent reads this first. Draft it from manifests and CI, ask what you can't find, and have them run each command. Link `project-conventions`.
 4. **Capabilities.** kanbot runs the process; the repo's own skills and agents do the work. Ask which skills they have for proving acceptance criteria (`verify`), technical review (`review`) and something a human can try (`preview`), and map them under `capabilities` in `.kanbot/config.yml`. See [Capabilities](#capabilities).
 5. **Board.** `kanbot board create`, or `kanbot board link --owner <login> --number <n>` for an existing project. Have them enable the four built-in project workflows it prints; they can't be set through the API.
 6. **Options.** Go through [Choose options](#choose-options). For app mode, run `kanbot app create` and have them install the app on the repo.
@@ -102,9 +104,9 @@ Warn: never enable the branch rule "Require approval of the most recent reviewab
 ## Troubleshoot
 
 1. `kanbot doctor`: prints a fix for each failed check.
-2. `kanbot status`: board by column, daemon, failures, rate-limit pause.
+2. `kanbot status`: board by column, what waits on the user (oldest first), daemon, failures, rate-limit pause.
 3. `.kanbot/logs/*.jsonl`: full agent transcripts.
 4. `needs-human` label: the issue has a comment saying why. Fix the cause, then remove the label to retry.
 5. Nothing happens: is the daemon running, are kanbot files pushed to the base branch, is the card in an active column?
-6. Card stays in Ready: the plan has open questions. kanbot commented on the issue. Answer them in Planning, or remove them from the plan.
+6. Card stays in Ready: the plan has open questions, or the issue is blocked by open issues. kanbot commented why. Answer questions in Planning; blocked cards start when the blockers close.
 7. Agent didn't use a skill: is it mapped under `capabilities`, does its `when` fit, and is it committed?
