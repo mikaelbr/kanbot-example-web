@@ -4,6 +4,8 @@ A web project set up with [kanbot](https://github.com/mikaelbr/kanbot), where th
 
 kanbot runs the process: board, plans, review rounds, PRs. The repo decides how code gets built, through the `capabilities` map in `.kanbot/config.yml`.
 
+For a small app with a filled-in `project-conventions`, see [kanbot-example-app](https://github.com/mikaelbr/kanbot-example-app).
+
 ## Run it
 
 Needs a kanbot release with `capabilities` (newer than 0.3.0), `gh` with the `project` scope, and `claude` or `codex`. See kanbot's [getting started](https://github.com/mikaelbr/kanbot/blob/main/docs/01-getting-started.md).
